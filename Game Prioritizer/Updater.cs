@@ -11,8 +11,15 @@ namespace Game_Prioritizer
 {
     class Updater
     {
+        private Form1 main;
+        public Updater(Form1 form1)
+        {
+            this.main = form1;
+        }
+
         public Boolean checkUpdate()
         {
+            main.sendLogData(1, "Checking for updates.");
             return doAsync().Result;
         }
 
@@ -33,8 +40,9 @@ namespace Game_Prioritizer
                     return true;
                 }
                 return false;
-            }catch(Exception ex)
+            }catch(Exception e)
             {
+                main.sendLogData(3, "Message: " + e);
                 return false;
             }
         }

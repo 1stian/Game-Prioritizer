@@ -52,6 +52,7 @@
             this.checkMini = new System.Windows.Forms.CheckBox();
             this.checkStartup = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.textLog = new System.Windows.Forms.TextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolLabelVersion = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -61,6 +62,9 @@
             this.notifMenuCheckUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.notifMenuExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonOpenDataDir = new System.Windows.Forms.Button();
+            this.buttonOpenLog = new System.Windows.Forms.Button();
+            this.buttonClearLog = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureStatus)).BeginInit();
@@ -70,6 +74,7 @@
             this.tabPage2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.notifMenu.SuspendLayout();
             this.SuspendLayout();
@@ -310,12 +315,30 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.buttonClearLog);
+            this.tabPage3.Controls.Add(this.buttonOpenLog);
+            this.tabPage3.Controls.Add(this.buttonOpenDataDir);
+            this.tabPage3.Controls.Add(this.textLog);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(658, 321);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Log";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // textLog
+            // 
+            this.textLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textLog.Location = new System.Drawing.Point(8, 34);
+            this.textLog.Multiline = true;
+            this.textLog.Name = "textLog";
+            this.textLog.ReadOnly = true;
+            this.textLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textLog.Size = new System.Drawing.Size(642, 266);
+            this.textLog.TabIndex = 0;
+            this.textLog.VisibleChanged += new System.EventHandler(this.textLog_VisibleChanged);
             // 
             // statusStrip1
             // 
@@ -386,6 +409,36 @@
             this.notifMenuExit.Size = new System.Drawing.Size(165, 22);
             this.notifMenuExit.Text = "Exit";
             // 
+            // buttonOpenDataDir
+            // 
+            this.buttonOpenDataDir.Location = new System.Drawing.Point(8, 5);
+            this.buttonOpenDataDir.Name = "buttonOpenDataDir";
+            this.buttonOpenDataDir.Size = new System.Drawing.Size(114, 23);
+            this.buttonOpenDataDir.TabIndex = 1;
+            this.buttonOpenDataDir.Text = "Open data directory";
+            this.buttonOpenDataDir.UseVisualStyleBackColor = true;
+            this.buttonOpenDataDir.Click += new System.EventHandler(this.buttonOpenDataDir_Click);
+            // 
+            // buttonOpenLog
+            // 
+            this.buttonOpenLog.Location = new System.Drawing.Point(128, 5);
+            this.buttonOpenLog.Name = "buttonOpenLog";
+            this.buttonOpenLog.Size = new System.Drawing.Size(90, 23);
+            this.buttonOpenLog.TabIndex = 2;
+            this.buttonOpenLog.Text = "Open log file";
+            this.buttonOpenLog.UseVisualStyleBackColor = true;
+            this.buttonOpenLog.Click += new System.EventHandler(this.buttonOpenLog_Click);
+            // 
+            // buttonClearLog
+            // 
+            this.buttonClearLog.Location = new System.Drawing.Point(561, 5);
+            this.buttonClearLog.Name = "buttonClearLog";
+            this.buttonClearLog.Size = new System.Drawing.Size(89, 23);
+            this.buttonClearLog.TabIndex = 3;
+            this.buttonClearLog.Text = "Clear log file";
+            this.buttonClearLog.UseVisualStyleBackColor = true;
+            this.buttonClearLog.Click += new System.EventHandler(this.buttonClearLog_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -414,6 +467,8 @@
             this.groupBox3.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.notifMenu.ResumeLayout(false);
@@ -455,6 +510,10 @@
         private System.Windows.Forms.ToolStripMenuItem notifMenuCheckUpdate;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem notifMenuExit;
+        public System.Windows.Forms.TextBox textLog;
+        private System.Windows.Forms.Button buttonOpenDataDir;
+        private System.Windows.Forms.Button buttonOpenLog;
+        private System.Windows.Forms.Button buttonClearLog;
     }
 }
 

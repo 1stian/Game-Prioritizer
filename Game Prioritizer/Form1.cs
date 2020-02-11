@@ -1,18 +1,10 @@
-﻿using IWshRuntimeLibrary;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Game_Prioritizer
@@ -20,14 +12,20 @@ namespace Game_Prioritizer
     public partial class Form1 : Form
     {
         Settings settings;
-        Updater updater = new Updater();
+        Updater updater;
         Run run;
-        public static string DIR;
+        Log log;
+
+        //Directories
+        public static string APPDATA;
         public static string EXEC_PATH;
         public static string WORK_DIR;
 
         //ArrayList for class Run
         public ArrayList games = new ArrayList();
+
+        //Localtimer
+        Timer upCheck = new Timer();
 
         public Form1()
         {
@@ -37,6 +35,8 @@ namespace Game_Prioritizer
             //THIS
             run = new Run(this);
             settings = new Settings(this);
+            log = new Log(this);
+            updater = new Updater(this);
 
             //Creating directory
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -46,19 +46,20 @@ namespace Game_Prioritizer
             {
                 System.IO.File.Create(specificFolder + "\\data.xml").Dispose();
             }
-            DIR = specificFolder.ToString();
+            APPDATA = specificFolder.ToString();
 
             //EXEC PATH
             EXEC_PATH = System.Reflection.Assembly.GetEntryAssembly().Location;
-            //WORK DIR
+            //WORK APPDATA
             RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\RealNaits\GamePrioritizer");
             WORK_DIR = key.GetValue("installPath").ToString();
 
             //Getting version.
             toolLabelVersion.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-            //Initialize timer in run.
+            //Initialize external timers
             run.initTimer();
+            log.initTimer();
 
             //Checking for update
             pictureUpdate.Visible = false;
@@ -75,12 +76,23 @@ namespace Game_Prioritizer
 
             //AutoStart
             autoStart();
+
+            //Init localtimer
+            upCheck.Interval = 1800000;
+            upCheck.Start();
+            upCheck.Tick += UpCheck_Tick;
+        }
+
+        private void UpCheck_Tick(object sender, EventArgs e)
+        {
+            checkForUpdate();
         }
 
         public void checkForUpdate()
         {
             if (updater.checkUpdate())
             {
+                sendLogData(1, "Found new update.");
                 pictureUpdate.Visible = true;
             }
         }
@@ -123,8 +135,8 @@ namespace Game_Prioritizer
 
             gameList.Items.AddRange(new object[] {
                 name + ", " + priority.ToString() + ", " + path,
-
             });
+            sendLogData(1, "Added: " + name + " to game list.");
         }
 
         public void updateChecker()
@@ -140,22 +152,30 @@ namespace Game_Prioritizer
 
         public void saveGameList()
         {
-            string sPath = DIR + "\\gameList.txt";
+            string sPath = APPDATA + "\\gameList.txt";
 
-            StreamWriter SaveFile = new StreamWriter(sPath);
-            foreach (var item in gameList.Items)
+            try
             {
-                SaveFile.WriteLine(item.ToString());
-            }
+                StreamWriter SaveFile = new StreamWriter(sPath);
+                foreach (var item in gameList.Items)
+                {
+                    SaveFile.WriteLine(item.ToString());
+                }
 
-            SaveFile.Close();
+                SaveFile.Close();
+                sendLogData(1, "Game list saved.");
+            }
+            catch (Exception e)
+            {
+                sendLogData(3, "Message: " + e);
+            }
         }
 
         public void loadGameList()
         {
             try
             {
-                string lPath = DIR + "\\gameList.txt";
+                string lPath = APPDATA + "\\gameList.txt";
                 string line;
                 StreamReader LoadFile = new StreamReader(lPath);
                 while ((line = LoadFile.ReadLine()) != null)
@@ -191,10 +211,11 @@ namespace Game_Prioritizer
                 }
 
                 LoadFile.Close();
+                sendLogData(1, "Game list loaded.");
             }
             catch(Exception e)
             {
-
+                sendLogData(3, "Message: " + e);
             }
         }
 
@@ -210,11 +231,14 @@ namespace Game_Prioritizer
 
             for (int i = selectedItems.Count - 1; i >= 0; i--)
                 gameList.Items.Remove(selectedItems[i]);
+
+            sendLogData(1, "Removed: " + gameList.SelectedItem.ToString() + " from game list.");
         }
 
         public void removeGameAt(int row)
         {
             gameList.Items.RemoveAt(row);
+            sendLogData(1, "Removed: " + gameList.SelectedItem.ToString() + " from game list.");
         }
 
         public void openWebsite()
@@ -307,6 +331,8 @@ namespace Game_Prioritizer
         {
             saveGameList();
             settings.saveSettings();
+            sendLogData(1, "Exited");
+            log.saveToFile();
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
@@ -411,6 +437,46 @@ namespace Game_Prioritizer
             else
             {
                 rk.DeleteValue("GamePrioritizer", false);
+            }
+        }
+
+        /// <summary>
+        /// Sending data to log.
+        /// </summary>
+        /// <param name="type">Info=1|Warning=2|Error=3</param>
+        /// <param name="msg">String message</param>
+        public void sendLogData(int type, string msg)
+        {
+            log.printLog(type, msg);
+        }
+
+        private void textLog_VisibleChanged(object sender, EventArgs e)
+        {
+            if (textLog.Visible)
+            {
+                textLog.SelectionStart = textLog.TextLength;
+                textLog.ScrollToCaret();
+            }
+        }
+
+        private void buttonOpenDataDir_Click(object sender, EventArgs e)
+        {
+            Process.Start("explorer.exe", APPDATA);
+        }
+
+        private void buttonOpenLog_Click(object sender, EventArgs e)
+        {
+            Process.Start(APPDATA + "\\log.txt");
+        }
+
+        private void buttonClearLog_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = MessageBox.Show("Do you really want to clear the log file?", "Clear log file", MessageBoxButtons.YesNo);
+
+            if (dr == DialogResult.Yes)
+            {
+                System.IO.File.WriteAllText(APPDATA + "\\log.txt", String.Empty);
+                textLog.Clear();
             }
         }
     }

@@ -26,18 +26,21 @@ namespace Game_Prioritizer
 
             off.Interval = 20000;
             off.Tick += Off_Tick;
+            main.sendLogData(1, "Initialized!");
         }
 
         public void startTimers()
         {
             tm.Start();
             off.Start();
+            main.sendLogData(1, "Starting!");
         }
 
         public void stopTimers()
         {
             tm.Stop();
             off.Stop();
+            main.sendLogData(1, "Stopping!");
         }
 
         private void Off_Tick(object sender, EventArgs e)
@@ -61,6 +64,7 @@ namespace Game_Prioritizer
                     }catch(Exception e)
                     {
                         main.SetGameText("no game running.", Color.Red);
+                        main.sendLogData(1, "Game exited!");
                     }
                 }
             }
@@ -105,6 +109,7 @@ namespace Game_Prioritizer
                         procIDs.Add(proc.ProcessName.ToString(), proc.Id);
                     }
                     main.SetGameText(proc.ProcessName.ToString(), Color.Green);
+                    main.sendLogData(1, "Game found, " + proc.ProcessName.ToString());
                 }
             }
         }

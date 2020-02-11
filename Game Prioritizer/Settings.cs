@@ -17,9 +17,9 @@ namespace Game_Prioritizer
         //Load and save
         public void loadSettings()
         {
-            if (File.Exists(Form1.DIR + "\\data.xml"))
+            if (File.Exists(Form1.APPDATA + "\\data.xml"))
             {
-                data = XmlDataReader(Form1.DIR + "\\data.xml");
+                data = XmlDataReader(Form1.APPDATA + "\\data.xml");
                 main.checkStartup.Checked = data.Startup;
                 main.checkMini.Checked = data.Minimized;
                 main.checkAuto.Checked = data.AutoRun;
@@ -56,7 +56,7 @@ namespace Game_Prioritizer
             data.AutoRun = auto;
             data.Tray = tray;
 
-            XmlDataWriter(data, Form1.DIR + "\\data.xml");
+            XmlDataWriter(data, Form1.APPDATA + "\\data.xml");
         }
 
 
