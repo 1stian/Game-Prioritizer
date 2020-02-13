@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Activities;
 using System.Collections;
 using System.Diagnostics;
 using System.Drawing;
@@ -11,6 +12,9 @@ namespace Game_Prioritizer
 {
     public partial class Form1 : Form
     {
+        public System.Drawing.Point lastLoc;
+        public System.Drawing.Size lastSize;
+
         Settings settings;
         Updater updater;
         Run run;
@@ -51,8 +55,7 @@ namespace Game_Prioritizer
             //EXEC PATH
             EXEC_PATH = System.Reflection.Assembly.GetEntryAssembly().Location;
             //WORK APPDATA
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\RealNaits\GamePrioritizer");
-            WORK_DIR = key.GetValue("installPath").ToString();
+            WORK_DIR = Path.GetDirectoryName(Application.ExecutablePath);
 
             //Getting version.
             toolLabelVersion.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -329,6 +332,8 @@ namespace Game_Prioritizer
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            lastSize = this.Size;
+            lastLoc = this.Location;
             saveGameList();
             settings.saveSettings();
             sendLogData(1, "Exited");
@@ -397,7 +402,6 @@ namespace Game_Prioritizer
         {
             Show();
             this.WindowState = FormWindowState.Normal;
-            notifyIcon1.Visible = false;
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -405,12 +409,14 @@ namespace Game_Prioritizer
             if (this.WindowState == FormWindowState.Minimized)
             {
                 Hide();
-                notifyIcon1.Visible = true;
             }
         }
 
         private void Form1_Shown(object sender, EventArgs e)
         {
+            this.Size = lastSize;
+            this.Location = lastLoc;
+
             if (checkMini.Checked == true && checkStartup.Checked == true)
             {
                 WindowState = FormWindowState.Minimized;
@@ -478,6 +484,22 @@ namespace Game_Prioritizer
                 System.IO.File.WriteAllText(APPDATA + "\\log.txt", String.Empty);
                 textLog.Clear();
             }
+        }
+
+        private void notifMenuOpen_Click(object sender, EventArgs e)
+        {
+            Show();
+            this.WindowState = FormWindowState.Normal;
+        }
+
+        private void notifMenuCheckUpdate_Click(object sender, EventArgs e)
+        {
+            checkForUpdate();
+        }
+
+        private void notifMenuExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

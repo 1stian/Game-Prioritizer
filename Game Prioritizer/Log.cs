@@ -39,15 +39,15 @@ namespace Game_Prioritizer
         {
             switch (type){
                 case 1:
-                    main.textLog.AppendText(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss") + " - " + msg + Environment.NewLine);
+                    main.textLog.AppendText(DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " - " + msg + Environment.NewLine);
                     appendLogFile(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss") + " - " + msg + Environment.NewLine);
                     break;
                 case 2:
-                    main.textLog.AppendText(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss") + " - Warning! " + msg + Environment.NewLine);
+                    main.textLog.AppendText(DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " - Warning! " + msg + Environment.NewLine);
                     appendLogFile(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss") + " - Warning! " + msg + Environment.NewLine);
                     break;
                 case 3:
-                    main.textLog.AppendText(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss") + " - Error! " + msg + Environment.NewLine);
+                    main.textLog.AppendText(DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " - Error! " + msg + Environment.NewLine);
                     appendLogFile(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss") + " - Error! " + msg + Environment.NewLine);
                     break;
             }

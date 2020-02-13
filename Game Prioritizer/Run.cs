@@ -15,6 +15,7 @@ namespace Game_Prioritizer
         }
 
         Hashtable procIDs = new Hashtable();
+        Boolean gameRunning = false;
 
         public Timer tm = new Timer();
         public Timer off = new Timer();
@@ -60,10 +61,13 @@ namespace Game_Prioritizer
                         if (Process.GetProcessById(Int32.Parse(procIDs[key].ToString())).HasExited)
                         {
                             main.SetGameText("no game running.", Color.Red);
+                            gameRunning = false;
+                            main.sendLogData(1, "Game exited!");
                         }
                     }catch(Exception e)
                     {
                         main.SetGameText("no game running.", Color.Red);
+                        gameRunning = false;
                         main.sendLogData(1, "Game exited!");
                     }
                 }
@@ -109,7 +113,11 @@ namespace Game_Prioritizer
                         procIDs.Add(proc.ProcessName.ToString(), proc.Id);
                     }
                     main.SetGameText(proc.ProcessName.ToString(), Color.Green);
-                    main.sendLogData(1, "Game found, " + proc.ProcessName.ToString());
+                    if (!gameRunning)
+                    {
+                        main.sendLogData(1, "Game found, " + proc.ProcessName.ToString());
+                    }
+                    gameRunning = true;
                 }
             }
         }

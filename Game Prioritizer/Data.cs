@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Game_Prioritizer
 {
@@ -34,6 +30,20 @@ namespace Game_Prioritizer
         {
             get { return _tray; }
             set { _tray = value; }
+        }
+
+        private System.Drawing.Point _location;
+        public System.Drawing.Point Location
+        {
+            get { return _location; }
+            set { _location = value; }
+        }
+
+        private System.Drawing.Size _size;
+        public System.Drawing.Size Size
+        {
+            get { return _size; }
+            set { _size = value; }
         }
     }
 }

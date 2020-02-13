@@ -20,6 +20,8 @@ namespace Game_Prioritizer
             if (File.Exists(Form1.APPDATA + "\\data.xml"))
             {
                 data = XmlDataReader(Form1.APPDATA + "\\data.xml");
+                main.lastLoc = data.Location;
+                main.lastSize = data.Size;
                 main.checkStartup.Checked = data.Startup;
                 main.checkMini.Checked = data.Minimized;
                 main.checkAuto.Checked = data.AutoRun;
@@ -51,6 +53,8 @@ namespace Game_Prioritizer
                 tray = true;
             }
 
+            data.Size = main.lastSize;
+            data.Location = main.lastLoc;
             data.Startup = startup;
             data.Minimized = mini;
             data.AutoRun = auto;
@@ -74,7 +78,18 @@ namespace Game_Prioritizer
             Data obj = new Data();
             XmlSerializer xs = new XmlSerializer(typeof(Data));
             FileStream reader = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
-            obj = (Data)xs.Deserialize(reader);
+
+            try
+            {
+                obj = (Data)xs.Deserialize(reader);
+                reader.Close();
+                return obj;
+            }
+            catch(Exception e)
+            {
+                reader.Close();
+                return obj;
+            }
             reader.Close();
             return obj;
         }
