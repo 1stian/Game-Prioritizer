@@ -22,10 +22,10 @@ namespace Game_Prioritizer
 
         private void Add_FormClosing(object sender, FormClosingEventArgs e)
         {
-            form1.reEnableAdd = true;
+            form1.ReEnableAdd = true;
         }
 
-        private void buttonBrowse_Click(object sender, EventArgs e)
+        private void ButtonBrowse_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "exe files (*.exe)|*.exe";
@@ -38,7 +38,7 @@ namespace Game_Prioritizer
             }
         }
 
-        private void buttonSave_Click(object sender, EventArgs e)
+        private void ButtonSave_Click(object sender, EventArgs e)
         {
             ProcessPriorityClass pri = ProcessPriorityClass.Normal;
 
@@ -56,7 +56,7 @@ namespace Game_Prioritizer
             }
 
 
-            form1.addGame(gName.Text, gPath.Text, pri);
+            form1.AddGame(gName.Text, gPath.Text, pri);
             this.Close();
         }
     }

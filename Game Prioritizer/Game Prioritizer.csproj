@@ -11,7 +11,7 @@
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
+    <Deterministic>false</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -134,7 +134,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Changelog.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="go.ico" />
+    <None Include="Resources\github.png" />
     <None Include="Resources\update.png" />
     <None Include="Resources\N.png" />
   </ItemGroup>
@@ -163,6 +167,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "D:\Stian\Dokumenter\Visual Stuido projects\GamePrioritizer\out\$(TargetFileName)"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "D:\Stian\Dokumenter\Visual Stuido projects\GamePrioritizer\out\$(TargetFileName)"
+copy "$(TargetDir)\Changelog.txt" "D:\Stian\Dokumenter\Visual Stuido projects\GamePrioritizer\out\Changelog.txt"</PostBuildEvent>
   </PropertyGroup>
 </Project>

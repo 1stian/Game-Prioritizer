@@ -46,6 +46,10 @@
             this.buttonAdd = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.textBoxCheckInterval = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.checkTray = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkAuto = new System.Windows.Forms.CheckBox();
@@ -56,6 +60,12 @@
             this.buttonOpenLog = new System.Windows.Forms.Button();
             this.buttonOpenDataDir = new System.Windows.Forms.Button();
             this.textLog = new System.Windows.Forms.TextBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.textBoxChangeLog = new System.Windows.Forms.RichTextBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolLabelVersion = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -75,6 +85,9 @@
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.notifMenu.SuspendLayout();
             this.SuspendLayout();
@@ -84,6 +97,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -120,7 +134,7 @@
             this.pictureStatus.Size = new System.Drawing.Size(18, 18);
             this.pictureStatus.TabIndex = 10;
             this.pictureStatus.TabStop = false;
-            this.pictureStatus.MouseHover += new System.EventHandler(this.pictureStatus_MouseHover);
+            this.pictureStatus.MouseHover += new System.EventHandler(this.PictureStatus_MouseHover);
             // 
             // buttonStop
             // 
@@ -131,7 +145,7 @@
             this.buttonStop.TabIndex = 9;
             this.buttonStop.Text = "Stop";
             this.buttonStop.UseVisualStyleBackColor = true;
-            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
+            this.buttonStop.Click += new System.EventHandler(this.ButtonStop_Click);
             // 
             // buttonStart
             // 
@@ -141,7 +155,7 @@
             this.buttonStart.TabIndex = 8;
             this.buttonStart.Text = "Start";
             this.buttonStart.UseVisualStyleBackColor = true;
-            this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
+            this.buttonStart.Click += new System.EventHandler(this.ButtonStart_Click);
             // 
             // pictureUpdate
             // 
@@ -153,7 +167,7 @@
             this.pictureUpdate.Size = new System.Drawing.Size(115, 96);
             this.pictureUpdate.TabIndex = 7;
             this.pictureUpdate.TabStop = false;
-            this.pictureUpdate.Click += new System.EventHandler(this.pictureUpdate_Click);
+            this.pictureUpdate.Click += new System.EventHandler(this.PictureUpdate_Click);
             // 
             // pictureBox1
             // 
@@ -166,7 +180,7 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 6;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDoubleClick);
+            this.pictureBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.PictureBox1_MouseDoubleClick);
             // 
             // labelGameRunning
             // 
@@ -217,7 +231,7 @@
             this.buttonDelete.TabIndex = 2;
             this.buttonDelete.Text = "Delete";
             this.buttonDelete.UseVisualStyleBackColor = true;
-            this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
+            this.buttonDelete.Click += new System.EventHandler(this.ButtonDelete_Click);
             // 
             // buttonEdit
             // 
@@ -227,7 +241,7 @@
             this.buttonEdit.TabIndex = 1;
             this.buttonEdit.Text = "Edit";
             this.buttonEdit.UseVisualStyleBackColor = true;
-            this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
+            this.buttonEdit.Click += new System.EventHandler(this.ButtonEdit_Click);
             // 
             // buttonAdd
             // 
@@ -237,7 +251,7 @@
             this.buttonAdd.TabIndex = 0;
             this.buttonAdd.Text = "Add";
             this.buttonAdd.UseVisualStyleBackColor = true;
-            this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
+            this.buttonAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
             // 
             // tabPage2
             // 
@@ -253,13 +267,54 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.label5);
+            this.groupBox3.Controls.Add(this.label4);
+            this.groupBox3.Controls.Add(this.textBoxCheckInterval);
+            this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Controls.Add(this.checkTray);
             this.groupBox3.Location = new System.Drawing.Point(8, 109);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(229, 125);
+            this.groupBox3.Size = new System.Drawing.Size(203, 117);
             this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "General";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 51);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(122, 26);
+            this.label5.TabIndex = 4;
+            this.label5.Text = "How often it will look for \r\nrunning games/apps";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(146, 85);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(47, 13);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "seconds";
+            // 
+            // textBoxCheckInterval
+            // 
+            this.textBoxCheckInterval.Location = new System.Drawing.Point(100, 81);
+            this.textBoxCheckInterval.Name = "textBoxCheckInterval";
+            this.textBoxCheckInterval.Size = new System.Drawing.Size(40, 20);
+            this.textBoxCheckInterval.TabIndex = 2;
+            this.textBoxCheckInterval.Text = "10";
+            this.textBoxCheckInterval.TextChanged += new System.EventHandler(this.TextBoxCheckInterval_TextChanged);
+            this.textBoxCheckInterval.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxCheckInterval_KeyPress);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 85);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(88, 13);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Check frequency";
             // 
             // checkTray
             // 
@@ -312,7 +367,7 @@
             this.checkStartup.TabIndex = 0;
             this.checkStartup.Text = "Start with windows";
             this.checkStartup.UseVisualStyleBackColor = true;
-            this.checkStartup.CheckedChanged += new System.EventHandler(this.checkStartup_CheckedChanged);
+            this.checkStartup.CheckedChanged += new System.EventHandler(this.CheckStartup_CheckedChanged);
             // 
             // tabPage3
             // 
@@ -335,7 +390,7 @@
             this.buttonClearLog.TabIndex = 3;
             this.buttonClearLog.Text = "Clear log file";
             this.buttonClearLog.UseVisualStyleBackColor = true;
-            this.buttonClearLog.Click += new System.EventHandler(this.buttonClearLog_Click);
+            this.buttonClearLog.Click += new System.EventHandler(this.ButtonClearLog_Click);
             // 
             // buttonOpenLog
             // 
@@ -345,7 +400,7 @@
             this.buttonOpenLog.TabIndex = 2;
             this.buttonOpenLog.Text = "Open log file";
             this.buttonOpenLog.UseVisualStyleBackColor = true;
-            this.buttonOpenLog.Click += new System.EventHandler(this.buttonOpenLog_Click);
+            this.buttonOpenLog.Click += new System.EventHandler(this.ButtonOpenLog_Click);
             // 
             // buttonOpenDataDir
             // 
@@ -355,7 +410,7 @@
             this.buttonOpenDataDir.TabIndex = 1;
             this.buttonOpenDataDir.Text = "Open data directory";
             this.buttonOpenDataDir.UseVisualStyleBackColor = true;
-            this.buttonOpenDataDir.Click += new System.EventHandler(this.buttonOpenDataDir_Click);
+            this.buttonOpenDataDir.Click += new System.EventHandler(this.ButtonOpenDataDir_Click);
             // 
             // textLog
             // 
@@ -369,7 +424,78 @@
             this.textLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textLog.Size = new System.Drawing.Size(642, 266);
             this.textLog.TabIndex = 0;
-            this.textLog.VisibleChanged += new System.EventHandler(this.textLog_VisibleChanged);
+            this.textLog.VisibleChanged += new System.EventHandler(this.TextLog_VisibleChanged);
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.textBoxChangeLog);
+            this.tabPage4.Controls.Add(this.button1);
+            this.tabPage4.Controls.Add(this.pictureBox3);
+            this.tabPage4.Controls.Add(this.pictureBox2);
+            this.tabPage4.Controls.Add(this.label2);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(658, 321);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "About";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // textBoxChangeLog
+            // 
+            this.textBoxChangeLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxChangeLog.Location = new System.Drawing.Point(11, 33);
+            this.textBoxChangeLog.Name = "textBoxChangeLog";
+            this.textBoxChangeLog.ReadOnly = true;
+            this.textBoxChangeLog.Size = new System.Drawing.Size(405, 267);
+            this.textBoxChangeLog.TabIndex = 10;
+            this.textBoxChangeLog.Text = "";
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(480, 33);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(114, 53);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "View on GitHub";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox3.Image = global::Game_Prioritizer.Properties.Resources.github;
+            this.pictureBox3.Location = new System.Drawing.Point(422, 33);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(52, 53);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox3.TabIndex = 8;
+            this.pictureBox3.TabStop = false;
+            this.pictureBox3.Click += new System.EventHandler(this.PictureBox3_Click);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox2.Image = global::Game_Prioritizer.Properties.Resources.N;
+            this.pictureBox2.Location = new System.Drawing.Point(422, 92);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(228, 208);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox2.TabIndex = 7;
+            this.pictureBox2.TabStop = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(8, 17);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(58, 13);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Changelog";
             // 
             // statusStrip1
             // 
@@ -396,7 +522,7 @@
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(154, 17);
             this.toolStripStatusLabel1.Text = "naits - https://realnaits.com";
-            this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
+            this.toolStripStatusLabel1.Click += new System.EventHandler(this.ToolStripStatusLabel1_Click);
             // 
             // notifyIcon1
             // 
@@ -404,9 +530,9 @@
             this.notifyIcon1.BalloonTipTitle = "Game Prioritizer";
             this.notifyIcon1.ContextMenuStrip = this.notifMenu;
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.Text = "Game Prioritizer";
             this.notifyIcon1.Visible = true;
-            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.NotifyIcon1_MouseDoubleClick);
             // 
             // notifMenu
             // 
@@ -423,14 +549,14 @@
             this.notifMenuOpen.Name = "notifMenuOpen";
             this.notifMenuOpen.Size = new System.Drawing.Size(165, 22);
             this.notifMenuOpen.Text = "Open";
-            this.notifMenuOpen.Click += new System.EventHandler(this.notifMenuOpen_Click);
+            this.notifMenuOpen.Click += new System.EventHandler(this.NotifMenuOpen_Click);
             // 
             // notifMenuCheckUpdate
             // 
             this.notifMenuCheckUpdate.Name = "notifMenuCheckUpdate";
             this.notifMenuCheckUpdate.Size = new System.Drawing.Size(165, 22);
             this.notifMenuCheckUpdate.Text = "Check for update";
-            this.notifMenuCheckUpdate.Click += new System.EventHandler(this.notifMenuCheckUpdate_Click);
+            this.notifMenuCheckUpdate.Click += new System.EventHandler(this.NotifMenuCheckUpdate_Click);
             // 
             // toolStripSeparator1
             // 
@@ -442,7 +568,7 @@
             this.notifMenuExit.Name = "notifMenuExit";
             this.notifMenuExit.Size = new System.Drawing.Size(165, 22);
             this.notifMenuExit.Text = "Exit";
-            this.notifMenuExit.Click += new System.EventHandler(this.notifMenuExit_Click);
+            this.notifMenuExit.Click += new System.EventHandler(this.NotifMenuExit_Click);
             // 
             // Form1
             // 
@@ -474,6 +600,10 @@
             this.groupBox2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.notifMenu.ResumeLayout(false);
@@ -519,6 +649,16 @@
         private System.Windows.Forms.Button buttonOpenDataDir;
         private System.Windows.Forms.Button buttonOpenLog;
         private System.Windows.Forms.Button buttonClearLog;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.RichTextBox textBoxChangeLog;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        public System.Windows.Forms.TextBox textBoxCheckInterval;
     }
 }
 

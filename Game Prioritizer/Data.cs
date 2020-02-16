@@ -45,5 +45,12 @@ namespace Game_Prioritizer
             get { return _size; }
             set { _size = value; }
         }
+
+        private Double _interval;
+        public Double Interval
+        {
+            get { return _interval; }
+            set { _interval = value; }
+        }
     }
 }

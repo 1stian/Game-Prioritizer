@@ -15,7 +15,7 @@ namespace Game_Prioritizer
         Data data = new Data();
 
         //Load and save
-        public void loadSettings()
+        public void LoadSettings()
         {
             if (File.Exists(Form1.APPDATA + "\\data.xml"))
             {
@@ -26,10 +26,11 @@ namespace Game_Prioritizer
                 main.checkMini.Checked = data.Minimized;
                 main.checkAuto.Checked = data.AutoRun;
                 main.checkTray.Checked = data.Tray;
+                main.CHECK_INTERVAL = data.Interval;
             }            
         }
 
-        public void saveSettings()
+        public void SaveSettings()
         {
             Boolean startup = false;
             Boolean mini = false;
@@ -59,6 +60,7 @@ namespace Game_Prioritizer
             data.Minimized = mini;
             data.AutoRun = auto;
             data.Tray = tray;
+            data.Interval = main.CHECK_INTERVAL;
 
             XmlDataWriter(data, Form1.APPDATA + "\\data.xml");
         }

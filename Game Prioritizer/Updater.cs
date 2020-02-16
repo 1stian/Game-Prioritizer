@@ -17,32 +17,35 @@ namespace Game_Prioritizer
             this.main = form1;
         }
 
-        public Boolean checkUpdate()
+        public string version = "0.0.0.0";
+
+        public Boolean CheckUpdate()
         {
-            main.sendLogData(1, "Checking for updates.");
-            return doAsync().Result;
+            main.SendLogData(1, "Checking for updates.");
+            return DoAsync().Result;
         }
 
-        public async Task<bool> doAsync(){
+        public async Task<bool> DoAsync(){
             try
             {
                 WebClient client = new WebClient();
-                Stream stream = client.OpenRead("https://realnaits.com/projects/gameoptimizer/version.txt");
+                Stream stream = client.OpenRead("https://realnaits.com/projects/gameoptimizer/v2.txt");
                 StreamReader reader = new StreamReader(stream);
                 String content = reader.ReadToEnd();
 
-                var current = new Version(Form1.getVersion().ToString());
+                var current = new Version(Form1.GetVersion().ToString());
                 var newVersion = new Version(content);
 
                 var result = current.CompareTo(newVersion);
                 if (result < 0)
                 {
+                    version = result.ToString();
                     return true;
                 }
                 return false;
             }catch(Exception e)
             {
-                main.sendLogData(3, "Message: " + e);
+                main.SendLogData(3, "Message: " + e);
                 return false;
             }
         }

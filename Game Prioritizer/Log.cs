@@ -18,7 +18,7 @@ namespace Game_Prioritizer
         }
 
         Timer saveTimer = new Timer();
-        public void initTimer()
+        public void InitTimer()
         {
             saveTimer.Tick += SaveTimer_Tick;
             saveTimer.Interval = 20000;
@@ -27,7 +27,7 @@ namespace Game_Prioritizer
 
         private void SaveTimer_Tick(object sender, EventArgs e)
         {
-            saveToFile();
+            SaveToFile();
         }
 
         /// <summary>
@@ -35,31 +35,58 @@ namespace Game_Prioritizer
         /// </summary>
         /// <param name="type">Info=1|Warning=2|Error=3</param>
         /// <param name="msg">String message</param>
-        public void printLog(int type, string msg)
+        public void PrintLog(int type, string msg)
         {
             switch (type){
                 case 1:
-                    main.textLog.AppendText(DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " - " + msg + Environment.NewLine);
-                    appendLogFile(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss") + " - " + msg + Environment.NewLine);
+                    if (main.textLog.InvokeRequired)
+                    {
+                        main.textLog.Invoke((MethodInvoker)(() => main.textLog.AppendText(DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") 
+                            + " - " + msg + Environment.NewLine)));
+                        AppendLogFile(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss") + " - " + msg + Environment.NewLine);
+                    }
+                    else
+                    {
+                        main.textLog.AppendText(DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " - " + msg + Environment.NewLine);
+                        AppendLogFile(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss") + " - " + msg + Environment.NewLine);
+                    }
                     break;
                 case 2:
-                    main.textLog.AppendText(DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " - Warning! " + msg + Environment.NewLine);
-                    appendLogFile(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss") + " - Warning! " + msg + Environment.NewLine);
+                    if (main.textLog.InvokeRequired)
+                    {
+                        main.textLog.Invoke((MethodInvoker)(() => main.textLog.AppendText(DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")
+                            + " - Warning! " + msg + Environment.NewLine)));
+                        AppendLogFile(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss") + " - Warning! " + msg + Environment.NewLine);
+                    }
+                    else
+                    {
+                        main.textLog.AppendText(DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " - Warning! " + msg + Environment.NewLine);
+                        AppendLogFile(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss") + " - Warning! " + msg + Environment.NewLine);
+                    }
                     break;
                 case 3:
-                    main.textLog.AppendText(DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " - Error! " + msg + Environment.NewLine);
-                    appendLogFile(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss") + " - Error! " + msg + Environment.NewLine);
+                    if (main.textLog.InvokeRequired)
+                    {
+                        main.textLog.Invoke((MethodInvoker)(() => main.textLog.AppendText(DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")
+                            + " - Error! " + msg + Environment.NewLine)));
+                        AppendLogFile(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss") + " - Error! " + msg + Environment.NewLine);
+                    }
+                    else
+                    {
+                        main.textLog.AppendText(DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " - Error! " + msg + Environment.NewLine);
+                        AppendLogFile(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss") + " - Error! " + msg + Environment.NewLine);
+                    }
                     break;
             }
         }
 
-        StringBuilder sb = new StringBuilder();
-        public void appendLogFile(string msg)
+        public StringBuilder sb = new StringBuilder();
+        public void AppendLogFile(string msg)
         {
             sb.Append(msg);
         }
 
-        public void saveToFile()
+        public void SaveToFile()
         {
             File.AppendAllText(Form1.APPDATA + "\\log.txt", sb.ToString());
             sb.Clear();

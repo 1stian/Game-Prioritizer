@@ -46,7 +46,7 @@
             this.buttonBrowse.TabIndex = 0;
             this.buttonBrowse.Text = "Browse";
             this.buttonBrowse.UseVisualStyleBackColor = true;
-            this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
+            this.buttonBrowse.Click += new System.EventHandler(this.ButtonBrowse_Click);
             // 
             // label1
             // 
@@ -112,7 +112,7 @@
             this.button1.TabIndex = 8;
             this.button1.Text = "Save";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.buttonSave_Click);
+            this.button1.Click += new System.EventHandler(this.ButtonSave_Click);
             // 
             // Add
             // 

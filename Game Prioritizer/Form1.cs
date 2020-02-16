@@ -5,6 +5,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -31,6 +32,9 @@ namespace Game_Prioritizer
         //Localtimer
         Timer upCheck = new Timer();
 
+        //User settings
+        public double CHECK_INTERVAL = 10;
+
         public Form1()
         {
             //Normal Initialize
@@ -54,19 +58,18 @@ namespace Game_Prioritizer
 
             //EXEC PATH
             EXEC_PATH = System.Reflection.Assembly.GetEntryAssembly().Location;
-            //WORK APPDATA
+            //WORK
             WORK_DIR = Path.GetDirectoryName(Application.ExecutablePath);
 
-            //Getting version.
-            toolLabelVersion.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            //Getting version
+            toolLabelVersion.Text = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-            //Initialize external timers
-            run.initTimer();
-            log.initTimer();
+            //Filling changelog
+            GrabChangeLog();
 
             //Checking for update
             pictureUpdate.Visible = false;
-            checkForUpdate();    
+            CheckForUpdate();
 
             //ListBox settings
             gameList.FormattingEnabled = true;
@@ -74,11 +77,16 @@ namespace Game_Prioritizer
             gameList.ScrollAlwaysVisible = true;
 
             //Loading and so on..
-            loadGameList();
-            settings.loadSettings();
+            LoadGameList();
+            settings.LoadSettings();
+            textBoxCheckInterval.Text = CHECK_INTERVAL.ToString();
+
+            //Initialize external timers
+            run.InitTimer();
+            log.InitTimer();
 
             //AutoStart
-            autoStart();
+            AutoStart();
 
             //Init localtimer
             upCheck.Interval = 1800000;
@@ -88,45 +96,62 @@ namespace Game_Prioritizer
 
         private void UpCheck_Tick(object sender, EventArgs e)
         {
-            checkForUpdate();
+            CheckForUpdate();
         }
 
-        public void checkForUpdate()
+        public Boolean CheckForUpdate()
         {
-            if (updater.checkUpdate())
+            if (updater.CheckUpdate())
             {
-                sendLogData(1, "Found new update.");
+                SendLogData(1, "Found new update. Version: " + updater.version);
                 pictureUpdate.Visible = true;
+                return true;
             }
+
+            return false;
         }
 
-        public static Version getVersion()
+        public static Version GetVersion()
         {
             return Assembly.GetExecutingAssembly().GetName().Version;
         }
 
-        public Boolean reEnableAdd
+        public Boolean ReEnableAdd
         {
             set { this.buttonAdd.Enabled = true; }
         }
 
-        public Boolean reEnableEdit
+        public Boolean ReEnableEdit
         {
             set { this.buttonEdit.Enabled = true; }
         }
 
         public void SetGameText(string name, Color color)
         {
-            labelGameRunning.ForeColor = color;
-            labelGameRunning.Text = name;
+            if (labelGameRunning.InvokeRequired)
+            {
+
+                labelGameRunning.Invoke((MethodInvoker)(() => labelGameRunning.Text = name));
+                labelGameRunning.Invoke((MethodInvoker)(() => labelGameRunning.ForeColor = Color.Green));
+            }
+            else
+            {
+                labelGameRunning.ForeColor = color;
+                labelGameRunning.Text = name;
+            }
         }
 
-        public string getGameText()
+        public void AppendLog(string msg)
+        {
+            log.AppendLogFile(msg);
+        }
+
+        public string GetGameText()
         {
             return labelGameRunning.Text;
         }
 
-        public void addGame(String name, String path, ProcessPriorityClass priority)
+        public void AddGame(String name, String path, ProcessPriorityClass priority)
         {
             if (name == null || path == null)
             {
@@ -139,10 +164,11 @@ namespace Game_Prioritizer
             gameList.Items.AddRange(new object[] {
                 name + ", " + priority.ToString() + ", " + path,
             });
-            sendLogData(1, "Added: " + name + " to game list.");
+            UpdateChecker();
+            SendLogData(1, "Added: " + name + " to game list.");
         }
 
-        public void updateChecker()
+        public void UpdateChecker()
         {
             if (gameList.Items.Count > 0)
             {
@@ -153,7 +179,7 @@ namespace Game_Prioritizer
             }
         }
 
-        public void saveGameList()
+        public void SaveGameList()
         {
             string sPath = APPDATA + "\\gameList.txt";
 
@@ -166,15 +192,15 @@ namespace Game_Prioritizer
                 }
 
                 SaveFile.Close();
-                sendLogData(1, "Game list saved.");
+                SendLogData(1, "Game list saved.");
             }
             catch (Exception e)
             {
-                sendLogData(3, "Message: " + e);
+                SendLogData(3, "Message: " + e);
             }
         }
 
-        public void loadGameList()
+        public void LoadGameList()
         {
             try
             {
@@ -204,7 +230,7 @@ namespace Game_Prioritizer
                         pri = ProcessPriorityClass.Normal;
                     }
 
-                    addGame(name, path, pri);
+                    AddGame(name, path, pri);
                 }
 
                 foreach (string game in gameList.Items)
@@ -214,16 +240,17 @@ namespace Game_Prioritizer
                 }
 
                 LoadFile.Close();
-                sendLogData(1, "Game list loaded.");
+                SendLogData(1, "Game list loaded.");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                sendLogData(3, "Message: " + e);
+                SendLogData(3, "gameList.txt file couldn't be found.. Might be first time using this application.");
             }
         }
 
-        public void removeGame()
+        public void RemoveGame()
         {
+            SendLogData(1, "Removed: " + gameList.SelectedItem.ToString() + " from game list.");
             if (gameList.SelectedItems == null)
             {
                 return;
@@ -235,28 +262,29 @@ namespace Game_Prioritizer
             for (int i = selectedItems.Count - 1; i >= 0; i--)
                 gameList.Items.Remove(selectedItems[i]);
 
-            sendLogData(1, "Removed: " + gameList.SelectedItem.ToString() + " from game list.");
+            UpdateChecker();
         }
 
-        public void removeGameAt(int row)
+        public void RemoveGameAt(int row)
         {
             gameList.Items.RemoveAt(row);
-            sendLogData(1, "Removed: " + gameList.SelectedItem.ToString() + " from game list.");
+            SendLogData(1, "Removed: " + gameList.SelectedItem.ToString() + " from game list.");
+            UpdateChecker();
         }
 
-        public void openWebsite()
+        public void OpenWebsite()
         {
             System.Diagnostics.Process.Start("https://realnaits.com/");
         }
 
-        private void buttonAdd_Click(object sender, EventArgs e)
+        private void ButtonAdd_Click(object sender, EventArgs e)
         {
             buttonAdd.Enabled = false;
             Add addForm = new Add();
             addForm.Show();
         }
 
-        private void buttonEdit_Click(object sender, EventArgs e)
+        private void ButtonEdit_Click(object sender, EventArgs e)
         {
             if (gameList.SelectedItem == null)
             {
@@ -293,7 +321,7 @@ namespace Game_Prioritizer
             edit.Show();
         }
 
-        private void buttonDelete_Click(object sender, EventArgs e)
+        private void ButtonDelete_Click(object sender, EventArgs e)
         {
             if (gameList.SelectedItem == null)
             {
@@ -307,16 +335,16 @@ namespace Game_Prioritizer
 
             if (dr == DialogResult.Yes)
             {
-                removeGame();
+                RemoveGame();
             }
         }
 
-        private void pictureBox1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void PictureBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            openWebsite();
+            OpenWebsite();
         }
 
-        private void removeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RemoveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ListBox.SelectedObjectCollection selectedItems = new ListBox.SelectedObjectCollection(gameList);
             selectedItems = gameList.SelectedItems;
@@ -325,26 +353,30 @@ namespace Game_Prioritizer
                 gameList.Items.Remove(selectedItems[i]);
         }
 
-        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
+        private void ToolStripStatusLabel1_Click(object sender, EventArgs e)
         {
-            openWebsite();
+            OpenWebsite();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             lastSize = this.Size;
-            lastLoc = this.Location;
-            saveGameList();
-            settings.saveSettings();
-            sendLogData(1, "Exited");
-            log.saveToFile();
+
+            if (this.WindowState != FormWindowState.Minimized)
+            {
+                lastLoc = this.Location;
+            }
+            SaveGameList();
+            settings.SaveSettings();
+            SendLogData(1, "Exited");
+            log.SaveToFile();
         }
 
-        private void buttonStart_Click(object sender, EventArgs e)
+        private void ButtonStart_Click(object sender, EventArgs e)
         {
-            start();
+            Start();
         }
-        public void start()
+        public void Start()
         {
             if (gameList.Items.Count < 1)
             {
@@ -352,28 +384,33 @@ namespace Game_Prioritizer
                 return;
             }
 
-            updateChecker();
+            //updateChecker();
 
-            run.startTimers();
+            run.StartTimers();
             pictureStatus.BackColor = Color.Green;
             buttonStart.Enabled = false;
             buttonStop.Enabled = true;
         }
 
-        private void buttonStop_Click(object sender, EventArgs e)
+        private void ButtonStop_Click(object sender, EventArgs e)
         {
-            stop();
+            Stop();
         }
 
-        public void stop()
+        public void Stop()
         {
-            run.stopTimers();
+            run.StopTimers();
             pictureStatus.BackColor = Color.DarkRed;
             buttonStart.Enabled = true;
             buttonStop.Enabled = false;
         }
 
-        private void pictureUpdate_Click(object sender, EventArgs e)
+        private void PictureUpdate_Click(object sender, EventArgs e)
+        {
+            StartUpdater();
+        }
+
+        public void StartUpdater()
         {
             DialogResult dr = MessageBox.Show("Do you want to update?", "Update?", MessageBoxButtons.YesNo);
 
@@ -384,7 +421,7 @@ namespace Game_Prioritizer
             }
         }
 
-        private void pictureStatus_MouseHover(object sender, EventArgs e)
+        private void PictureStatus_MouseHover(object sender, EventArgs e)
         {
             ToolTip tt = new ToolTip();
 
@@ -398,7 +435,7 @@ namespace Game_Prioritizer
             }
         }
 
-        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void NotifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             Show();
             this.WindowState = FormWindowState.Normal;
@@ -424,15 +461,15 @@ namespace Game_Prioritizer
             }
         }
 
-        public void autoStart()
+        public void AutoStart()
         {
             if (checkAuto.Checked)
             {
-                start();
+                Start();
             }
         }
 
-        private void checkStartup_CheckedChanged(object sender, EventArgs e)
+        private void CheckStartup_CheckedChanged(object sender, EventArgs e)
         {
             RegistryKey rk = Registry.CurrentUser.OpenSubKey
                 ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
@@ -451,12 +488,12 @@ namespace Game_Prioritizer
         /// </summary>
         /// <param name="type">Info=1|Warning=2|Error=3</param>
         /// <param name="msg">String message</param>
-        public void sendLogData(int type, string msg)
+        public void SendLogData(int type, string msg)
         {
-            log.printLog(type, msg);
+            log.PrintLog(type, msg);
         }
 
-        private void textLog_VisibleChanged(object sender, EventArgs e)
+        private void TextLog_VisibleChanged(object sender, EventArgs e)
         {
             if (textLog.Visible)
             {
@@ -465,17 +502,17 @@ namespace Game_Prioritizer
             }
         }
 
-        private void buttonOpenDataDir_Click(object sender, EventArgs e)
+        private void ButtonOpenDataDir_Click(object sender, EventArgs e)
         {
             Process.Start("explorer.exe", APPDATA);
         }
 
-        private void buttonOpenLog_Click(object sender, EventArgs e)
+        private void ButtonOpenLog_Click(object sender, EventArgs e)
         {
             Process.Start(APPDATA + "\\log.txt");
         }
 
-        private void buttonClearLog_Click(object sender, EventArgs e)
+        private void ButtonClearLog_Click(object sender, EventArgs e)
         {
             DialogResult dr = MessageBox.Show("Do you really want to clear the log file?", "Clear log file", MessageBoxButtons.YesNo);
 
@@ -486,20 +523,90 @@ namespace Game_Prioritizer
             }
         }
 
-        private void notifMenuOpen_Click(object sender, EventArgs e)
+        private void NotifMenuOpen_Click(object sender, EventArgs e)
         {
             Show();
             this.WindowState = FormWindowState.Normal;
         }
 
-        private void notifMenuCheckUpdate_Click(object sender, EventArgs e)
+        private void NotifMenuCheckUpdate_Click(object sender, EventArgs e)
         {
-            checkForUpdate();
+            if (CheckForUpdate())
+            {
+                StartUpdater();
+            }
         }
 
-        private void notifMenuExit_Click(object sender, EventArgs e)
+        private void NotifMenuExit_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            OpenGitHub();
+        }
+
+        private void PictureBox3_Click(object sender, EventArgs e)
+        {
+            OpenGitHub();
+        }
+
+        public void OpenGitHub()
+        {
+            Process.Start("https://github.com/realNaits/Game-Prioritizer");
+        }
+
+        public void GrabChangeLog()
+        {
+            WebClient client = new WebClient();
+            try
+            {
+                client.DownloadFile("https://realnaits.com/projects/gameoptimizer/Changelog.txt", APPDATA + "\\Changelog.txt");
+                String content = File.ReadAllText(APPDATA + "\\Changelog.txt");
+                textBoxChangeLog.Text = content;
+            }
+            catch (Exception e)
+            {
+                SendLogData(2, e.ToString());
+            }
+        }
+
+        //Only accept numbers for check interval and max lengt is two.
+        private void TextBoxCheckInterval_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            textBoxCheckInterval.MaxLength = 2;
+
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        //Checking if check interval has a value, if not it stops the timer.
+        private void TextBoxCheckInterval_TextChanged(object sender, EventArgs e)
+        {
+            if (textBoxCheckInterval.TextLength == 0)
+            {
+                CHECK_INTERVAL = ConvertSecondsToMilliseconds(double.Parse("10"));
+                run.tm.Interval = (int)CHECK_INTERVAL;
+            }
+
+            try
+            {
+                CHECK_INTERVAL = double.Parse(textBoxCheckInterval.Text);
+                run.tm.Interval = ConvertSecondsToMilliseconds(CHECK_INTERVAL);
+            }
+            catch (Exception ex)
+            {
+                CHECK_INTERVAL = 10;
+                run.tm.Interval = ConvertSecondsToMilliseconds(CHECK_INTERVAL);
+            }
+        }
+
+        public double ConvertSecondsToMilliseconds(double seconds)
+        {
+            return TimeSpan.FromSeconds(seconds).TotalMilliseconds;
         }
     }
 }

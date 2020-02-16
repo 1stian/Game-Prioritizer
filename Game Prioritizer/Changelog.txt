@@ -1,0 +1,18 @@
+﻿#1.1.0.6 (15.02.2020)
+- Fixed bug where it thought the game has exited all the time.
+
+#1.1.0.4 (13.02.2020)
+- Fixed application error when deleting games from the list.
+- Fixed so changelog loads as it should.
+
+#1.1.0.3 (13.02.2020)
+- Fixed where the window would not open again, if the application was exited while being minimized.
+
+#Third update (13.02.2020) - 1.1.0.2
+- Added about page with changelog section.
+
+#Second update (12.02.2020)
+- Added log secions
+
+#Initial release (10.02.2020)
+- Everything

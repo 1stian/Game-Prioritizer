@@ -15,72 +15,61 @@ namespace Game_Prioritizer
         }
 
         Hashtable procIDs = new Hashtable();
-        Boolean gameRunning = false;
 
-        public Timer tm = new Timer();
-        public Timer off = new Timer();
+        public System.Timers.Timer tm = new System.Timers.Timer();
 
-        public void initTimer()
+        public void InitTimer()
         {
-            tm.Interval = 10000;
-            tm.Tick += Tm_Tick;
-
-            off.Interval = 20000;
-            off.Tick += Off_Tick;
-            main.sendLogData(1, "Initialized!");
+            tm.Interval = main.ConvertSecondsToMilliseconds(main.CHECK_INTERVAL);
+            tm.Elapsed += Tm_Elapsed;
         }
 
-        public void startTimers()
+        private void Tm_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            CheckGames();
+        }
+
+        public void StartTimers()
         {
             tm.Start();
-            off.Start();
-            main.sendLogData(1, "Starting!");
+            main.SendLogData(1, "Starting!");
         }
 
-        public void stopTimers()
+        public void StopTimers()
         {
             tm.Stop();
-            off.Stop();
-            main.sendLogData(1, "Stopping!");
+            main.SendLogData(1, "Stopping!");
         }
 
-        private void Off_Tick(object sender, EventArgs e)
+        public void ProcessWaiter()
         {
-            stillRunning();
+            string key = main.GetGameText();
+            Process proc = Process.GetProcessById(Int32.Parse(procIDs[key].ToString()));
+            proc.EnableRaisingEvents = true;
+            proc.Exited += Proc_Exited;
         }
 
-        public void stillRunning()
+        private void Proc_Exited(object sender, EventArgs e)
         {
-            foreach (string item in procIDs.Keys)
+            string key = main.GetGameText();
+            if (main.labelGameRunning.InvokeRequired)
             {
-                string key = main.getGameText();
-                if (key == item)
-                {
-                    try
-                    {
-                        if (Process.GetProcessById(Int32.Parse(procIDs[key].ToString())).HasExited)
-                        {
-                            main.SetGameText("no game running.", Color.Red);
-                            gameRunning = false;
-                            main.sendLogData(1, "Game exited!");
-                        }
-                    }catch(Exception e)
-                    {
-                        main.SetGameText("no game running.", Color.Red);
-                        gameRunning = false;
-                        main.sendLogData(1, "Game exited!");
-                    }
-                }
+                main.labelGameRunning.Invoke((MethodInvoker)(() => main.labelGameRunning.Text = "no game running."));
+                main.labelGameRunning.Invoke((MethodInvoker)(() => main.labelGameRunning.ForeColor = Color.Red));
             }
 
+            if (main.textLog.InvokeRequired)
+            {
+                main.textLog.Invoke((MethodInvoker)(() => main.textLog.AppendText(DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")
+                    + " - " + "Game exited!" + Environment.NewLine)));
+            }
+
+            main.AppendLog(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss") + " - " + "Game exited!" + Environment.NewLine);
+            procIDs.Clear();
+            tm.Start();
         }
 
-        private void Tm_Tick(object sender, EventArgs e)
-        {
-            checkGames();
-        }
-
-        public void checkGames()
+        public void CheckGames()
         {
             foreach (string game in main.games)
             {
@@ -103,7 +92,7 @@ namespace Game_Prioritizer
                 {
                     priority = ProcessPriorityClass.Normal;
                 }
-                
+
                 Process[] processes = Process.GetProcessesByName(name);
                 foreach (Process proc in processes)
                 {
@@ -111,13 +100,11 @@ namespace Game_Prioritizer
                     if (!procIDs.ContainsKey(name))
                     {
                         procIDs.Add(proc.ProcessName.ToString(), proc.Id);
+                        main.SendLogData(1, "Game found, " + proc.ProcessName.ToString());
+                        main.SetGameText(proc.ProcessName.ToString(), Color.Green);
+                        ProcessWaiter();
+                        tm.Stop();
                     }
-                    main.SetGameText(proc.ProcessName.ToString(), Color.Green);
-                    if (!gameRunning)
-                    {
-                        main.sendLogData(1, "Game found, " + proc.ProcessName.ToString());
-                    }
-                    gameRunning = true;
                 }
             }
         }

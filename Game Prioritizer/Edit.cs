@@ -32,7 +32,7 @@ namespace Game_Prioritizer
             comboBoxPriority.Text = priority.ToString();
         }
 
-        private void buttonSave_Click(object sender, EventArgs e)
+        private void ButtonSave_Click(object sender, EventArgs e)
         {
             ProcessPriorityClass pri = ProcessPriorityClass.Normal;
 
@@ -49,17 +49,17 @@ namespace Game_Prioritizer
                 pri = ProcessPriorityClass.Normal;
             }
 
-            form1.removeGameAt(gameRow);
-            form1.addGame(gameName, textBoxPath.Text, pri);
+            form1.RemoveGameAt(gameRow);
+            form1.AddGame(gameName, textBoxPath.Text, pri);
             this.Close();
         }
 
         private void Edit_FormClosing(object sender, FormClosingEventArgs e)
         {
-            form1.reEnableEdit = true;
+            form1.ReEnableEdit = true;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "exe files (*.exe)|*.exe";
